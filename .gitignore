@@ -1,0 +1,64 @@
+.idea/
+*.iml
+.idea/shelf/
+.idea/workspace.xml
+.idea/httpRequests/
+
+# -----------------------------------
+# BACKEND (Spring Boot)
+# -----------------------------------
+
+backend/HELP.md
+backend/target/
+backend/.mvn/wrapper/maven-wrapper.jar
+
+# Keep target in special cases
+!backend/**/src/main/**/target/
+!backend/**/src/test/**/target/
+
+# STS
+backend/.apt_generated
+backend/.classpath
+backend/.factorypath
+backend/.project
+backend/.settings
+backend/.springBeans
+backend/.sts4-cache
+
+backend/.idea/
+backend/*.iws
+backend/*.iml
+backend/*.ipr
+backend/*.log
+
+# NetBeans
+backend/nbproject/private/
+backend/nbbuild/
+backend/dist/
+backend/nbdist/
+backend/.nb-gradle/
+backend/build/
+!backend/**/src/main/**/build/
+!backend/**/src/test/**/build/
+
+backend/.vscode/
+backend/.idea/shelf/
+backend/.idea/workspace.xml
+backend/.idea/httpRequests/
+
+# -----------------------------------
+# FRONTEND (React/Vite)
+# -----------------------------------
+
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.idea/
+frontend/.vscode/
+
+# -----------------------------------
+# OS / EDITOR
+# -----------------------------------
+
+.DS_Store
+Thumbs.db
