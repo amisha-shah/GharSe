@@ -6,10 +6,7 @@ import com.tcet.gharse.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -20,16 +17,18 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody User user) {
-        return new ResponseEntity<>(userService.register(user), HttpStatus.CREATED);
+        User saved = userService.register(user);
+        saved.setPassword(null);
+        return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
     public ResponseEntity<User> login(@RequestBody LoginRequest req) {
         User loggedIn = userService.login(req.getEmail(), req.getPassword());
-        if (loggedIn != null) {
-            return ResponseEntity.ok(loggedIn);
-        } else {
+        if (loggedIn == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
+        loggedIn.setPassword(null);
+        return ResponseEntity.ok(loggedIn);
     }
 }
