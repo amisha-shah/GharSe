@@ -4,6 +4,7 @@ import com.tcet.gharse.dto.ProviderResponseDTO;
 import com.tcet.gharse.entity.ProviderProfile;
 import com.tcet.gharse.entity.User;
 import com.tcet.gharse.enums.Role;
+import com.tcet.gharse.mapper.ProviderMapper;
 import com.tcet.gharse.repository.ProviderProfileRepository;
 import com.tcet.gharse.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,17 +19,6 @@ public class ProviderProfileController {
 
     @Autowired
     private UserRepository userRepo;
-
-    private ProviderResponseDTO toDTO(ProviderProfile p) {
-        ProviderResponseDTO dto = new ProviderResponseDTO();
-        dto.setId(p.getId());
-        dto.setName(p.getName());
-        dto.setPhone(p.getPhone());
-        dto.setWhatsapp(p.getWhatsapp());
-        dto.setLatitude(p.getLatitude());
-        dto.setLongitude(p.getLongitude());
-        return dto;
-    }
 
     @PostMapping("/profile/{userId}")
     public ProviderResponseDTO createOrUpdateProfile(
@@ -56,6 +46,6 @@ public class ProviderProfileController {
             saved = profileRepo.save(profile);
         }
 
-        return toDTO(saved);
+        return ProviderMapper.toResponseDTO(saved);
     }
 }

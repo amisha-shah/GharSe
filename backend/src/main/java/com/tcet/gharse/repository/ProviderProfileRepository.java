@@ -12,6 +12,14 @@ public interface ProviderProfileRepository
 
     ProviderProfile findByUserId(Long userId);
 
+    /*
+    Uses the Haversine formula to calculate the great-circle distance between two points on
+    Earth (given latitude and longitude).
+    - 6371 = Earth's radius in kilometers
+    - Filters Providers within the given radius (km)
+    - Sorts results by nearest providers first
+    Calculation done in SQL to avoid loading all Providers into memory.
+     */
     @Query(value = """
             SELECT p.*,
             (6371 * acos(
@@ -23,7 +31,9 @@ public interface ProviderProfileRepository
             )) AS distance
             FROM provider_profile p
             WHERE p.active = true
-            HAVING distance < :radius
+              AND p.latitude IS NOT NULL
+              AND p.longitude IS NOT NULL
+            HAVING distance <= :radius
             ORDER BY distance
             """,
             nativeQuery = true)
