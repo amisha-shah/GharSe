@@ -2,6 +2,7 @@ package com.tcet.gharse.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,41 +17,51 @@ import java.util.List;
 @Configuration
 public class SecurityConfig {
 
-   @Bean
-public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http
-        .csrf(csrf -> csrf.disable())
-        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-        .authorizeHttpRequests(auth -> auth
-            .requestMatchers(
-                "/auth/**",   // ✅ allow login/register
-                "/api/**"
-            ).permitAll()
-            .anyRequest().permitAll()
-        );
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+            .csrf(csrf -> csrf.disable())
 
-    return http.build();
-}
+            // ✅ Enable CORS properly
+            .cors(Customizer.withDefaults())
+
+            .authorizeHttpRequests(auth -> auth
+
+                // ✅ allow auth APIs
+                .requestMatchers("/auth/**").permitAll()
+
+                // ✅ allow all APIs (for now - testing)
+                .requestMatchers("/api/**").permitAll()
+
+                // ✅ allow preflight requests
+                .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
+
+                // ✅ allow everything else (for now)
+                .anyRequest().permitAll()
+            );
+
+        return http.build();
+    }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
-        // ✅ Allow frontend URLs
-    config.setAllowedOrigins(List.of(
-    "http://localhost:5173",
-    "http://localhost:8081"
-));
+        // ✅ frontend URLs
+        config.setAllowedOrigins(List.of(
+                "http://localhost:5173",
+                "http://localhost:8081"
+        ));
 
-        // ✅ Allow HTTP methods
+        // ✅ methods
         config.setAllowedMethods(List.of(
                 "GET", "POST", "PUT", "DELETE", "OPTIONS"
         ));
 
-        // ✅ Allow all headers
+        // ✅ headers
         config.setAllowedHeaders(List.of("*"));
 
-        // ✅ Allow credentials (optional but recommended)
+        // ✅ allow cookies / auth
         config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
